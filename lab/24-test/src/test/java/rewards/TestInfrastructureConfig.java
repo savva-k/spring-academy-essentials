@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Import;
 
 import config.RewardsConfig;
 
-@Configuration
+//@Configuration
 @Import({
 	TestInfrastructureLocalConfig.class,
 	TestInfrastructureJndiConfig.class,
