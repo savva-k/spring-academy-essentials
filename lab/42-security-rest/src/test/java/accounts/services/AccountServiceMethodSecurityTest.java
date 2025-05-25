@@ -1,7 +1,5 @@
 package accounts.services;
 
-import accounts.RestWsApplication;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -24,7 +24,6 @@ class AccountServiceMethodSecurityTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    @Disabled
     void getAuthoritiesForUser_should_return_403_for_user() {
 
         ResponseEntity<String> responseEntity = restTemplate.withBasicAuth("user", "user")
@@ -34,7 +33,6 @@ class AccountServiceMethodSecurityTest {
     }
 
     @Test
-    @Disabled
     void getAuthoritiesForUser_should_return_authorities_for_admin() {
 
         String[] authorities = restTemplate.withBasicAuth("admin", "admin")
@@ -52,9 +50,10 @@ class AccountServiceMethodSecurityTest {
     //           "ROLE_USER".
     @Test
     public void getAuthoritiesForUser_should_return_authorities_for_superadmin() {
-
-
-
+        String[] authorities = restTemplate.withBasicAuth("superadmin", "superadmin")
+                .getForObject("/authorities?username=superadmin", String[].class);
+        assertThat(authorities.length).isEqualTo(3);
+        assertThat(authorities).containsAll(List.of("ROLE_USER", "ROLE_ADMIN", "ROLE_SUPERADMIN"));
     }
 
 }
